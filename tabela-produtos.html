@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Tabela de Produtos com Filtro e Ordenação</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+
+    thead {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: #f2f2f2;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #ffffff;
+    }
+
+    tbody tr:hover {
+      background-color: #e0f7e0;
+    }
+
+    select {
+      padding: 8px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Tabela de Produtos</h2>
+
+  <label for="filter">Filtrar por categoria:</label>
+  <select id="filter" onchange="filterTable()">
+    <option value="todas">Todas</option>
+    <option value="Informática">Informática</option>
+    <option value="Áudio">Áudio</option>
+    <option value="Eletrodomésticos">Eletrodomésticos</option>
+    <option value="Telefonia">Telefonia</option>
+  </select>
+
+  <table id="productTable">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Nome ⬍</th>
+        <th onclick="sortTable(1, true)">Preço ⬍</th>
+        <th>Categoria</th>
+        <th>Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Notebook Dell Inspiron</td>
+        <td>R$ 4.200,00</td>
+        <td>Informática</td>
+        <td>Notebook com processador Intel i7 e SSD de 512GB.</td>
+      </tr>
+      <tr>
+        <td>Fone de Ouvido JBL</td>
+        <td>R$ 299,90</td>
+        <td>Áudio</td>
+        <td>Fone sem fio com cancelamento de ruído ativo.</td>
+      </tr>
+      <tr>
+        <td>Cafeteira Elétrica Mondial</td>
+        <td>R$ 149,90</td>
+        <td>Eletrodomésticos</td>
+        <td>Prepara até 18 xícaras com sistema corta-pingos.</td>
+      </tr>
+      <tr>
+        <td>Smartphone Samsung Galaxy S23</td>
+        <td>R$ 5.999,00</td>
+        <td>Telefonia</td>
+        <td>Celular com câmera tripla e 256GB de armazenamento.</td>
+      </tr>
+      <tr>
+        <td>Mouse Gamer Logitech</td>
+        <td>R$ 249,00</td>
+        <td>Informática</td>
+        <td>Mouse com sensor de alta precisão e luz RGB personalizável.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    function filterTable() {
+      const category = document.getElementById("filter").value;
+      const table = document.getElementById("productTable");
+      const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+      for (let row of rows) {
+        const cell = row.getElementsByTagName("td")[2];
+        const value = cell.textContent || cell.innerText;
+        row.style.display = (category === "todas" || value === category) ? "" : "none";
+      }
+    }
+
+    let sortDirection = [true, true];
+
+    function sortTable(colIndex, isPrice = false) {
+      const table = document.getElementById("productTable");
+      const rows = Array.from(table.tBodies[0].rows);
+      const direction = sortDirection[colIndex] ? 1 : -1;
+
+      rows.sort((a, b) => {
+        let aText = a.cells[colIndex].textContent.trim();
+        let bText = b.cells[colIndex].textContent.trim();
+
+        if (isPrice) {
+          aText = parseFloat(aText.replace(/[^\d,]/g, "").replace(",", "."));
+          bText = parseFloat(bText.replace(/[^\d,]/g, "").replace(",", "."));
+        }
+
+        return (aText > bText ? 1 : -1) * direction;
+      });
+
+      sortDirection[colIndex] = !sortDirection[colIndex];
+
+      const tbody = table.tBodies[0];
+      rows.forEach(row => tbody.appendChild(row));
+    }
+  </script>
+
+</body>
+</html>
