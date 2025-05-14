@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulário de Contato</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #f2f2f2;
+    }
+
+    .form-container {
+      background-color: #fff;
+      padding: 20px 30px;
+      border-radius: 8px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .message i {
+      margin-right: 8px;
+    }
+
+    .success i {
+      color: #28a745;
+    }
+
+    .error i {
+      color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Contato</h2>
+    <form id="contactForm">
+      <label for="name">Nome:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="message">Mensagem:</label>
+      <textarea id="message" name="message" rows="4" required></textarea>
+
+      <button type="submit">Enviar</button>
+
+      <div id="responseMessage" class="message"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('contactForm');
+    const responseMessage = document.getElementById('responseMessage');
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const message = form.message.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!name || !email || !message) {
+        showMessage('<i class="fas fa-circle-xmark"></i> Todos os campos são obrigatórios.', 'error');
+        return;
+      }
+
+      if (!emailRegex.test(email)) {
+        showMessage('<i class="fas fa-circle-exclamation"></i> Por favor, insira um e-mail válido.', 'error');
+        return;
+      }
+
+      showMessage('<i class="fas fa-circle-check"></i> Mensagem enviada com sucesso!', 'success');
+      form.reset();
+    });
+
+    function showMessage(msg, type) {
+      responseMessage.innerHTML = msg;
+      responseMessage.className = `message ${type}`;
+      responseMessage.style.display = 'block';
+
+      setTimeout(() => {
+        responseMessage.style.display = 'none';
+      }, 4000);
+    }
+  </script>
+
+</body>
+</html>
